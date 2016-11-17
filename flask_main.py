@@ -29,10 +29,9 @@ app = flask.Flask(__name__)
 print("Entering Setup")
 
 try:
-	dbclient = MongoClient(CONFIG.MONGO_URL)
-	db = dbclient.uo-club-manager
-	collection = db.Users
-
+	dbclient = MongoClient("mongodb://407-Admin:csrocks1@ds157487.mlab.com:57487/clubmanager")
+	db = dbclient.clubmanager
+	collection = db.accounts
 except:
 	print("Failure to open database. Is the Mongo server running? Correct Password?")
 	sys.exit(1)
@@ -51,7 +50,9 @@ app.secret_key = str(uuid.uuid4())
 def index():
 	app.logger.debug("Main page entry")
 	app.logger.debug("Getting accounts now")
-	flask.session['accounts'] =  get_accounts()
+	date = arrow.utcnow()
+	insert_account(date.format('MM/DD/YYYY'),"Jared", "Smith", "951452843", "", "", "")
+	#flask.session['accounts'] =  get_accounts()
 	
 	return flask.render_template('index.html')
 
@@ -164,7 +165,7 @@ def insert_account(date, first, last, s_id, status, sum_name, referral):
 	dt = arrow.get(date, 'MM/DD/YYYY').replace(tzinfo='local')
 	iso_dt = dt.isoformat()
 	
-	print("Complining account from data")
+	print("Compiling account from data")
 	account = {
 			"type" :  "account",
 			"date" : iso_dt,
