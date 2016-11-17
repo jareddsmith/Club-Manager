@@ -51,7 +51,7 @@ app.secret_key = str(uuid.uuid4())
 def index():
 	app.logger.debug("Main page entry")
 	app.logger.debug("Getting data now")
-	flask.session['data'] =  get_data()
+	flask.session['accounts'] =  get_accounts()
 	
 	return flask.render_template('index.html')
 
