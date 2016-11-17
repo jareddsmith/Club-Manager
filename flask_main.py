@@ -29,7 +29,7 @@ app = flask.Flask(__name__)
 print("Entering Setup")
 
 try:
-	dbclient = MongoClient("mongodb://407-Admin:csrocks1@ds157487.mlab.com:57487/clubmanager")
+	dbclient = MongoClient(CONFIG.MONGO_URL)
 	db = dbclient.clubmanager
 	collection = db.accounts
 except:
@@ -51,7 +51,7 @@ def index():
 	app.logger.debug("Main page entry")
 	app.logger.debug("Getting accounts now")
 	date = arrow.utcnow()
-	insert_account(date.format('MM/DD/YYYY'),"Jared", "Smith", "951452843", "", "", "")
+	insert_account(date.format('MM/DD/YYYY'),"Jared", "Smith", "951452843", "Senior", "Devil Rush", "n/a")
 	#flask.session['accounts'] =  get_accounts()
 	
 	return flask.render_template('index.html')
