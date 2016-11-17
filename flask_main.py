@@ -50,7 +50,7 @@ app.secret_key = str(uuid.uuid4())
 @app.route("/index")
 def index():
 	app.logger.debug("Main page entry")
-	app.logger.debug("Getting data now")
+	app.logger.debug("Getting accounts now")
 	flask.session['accounts'] =  get_accounts()
 	
 	return flask.render_template('index.html')
