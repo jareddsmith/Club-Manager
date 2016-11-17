@@ -30,8 +30,8 @@ print("Entering Setup")
 
 try:
 	dbclient = MongoClient(CONFIG.MONGO_URL)
-	db = dbclient.**TBD**
-	collection = db.**TBD**
+	db = dbclient.uo-club-manager
+	collection = db.Users
 
 except:
 	print("Failure to open database. Is the Mongo server running? Correct Password?")
