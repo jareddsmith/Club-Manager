@@ -49,17 +49,25 @@ app.secret_key = str(uuid.uuid4())
 @app.route("/index")
 def index():
 	app.logger.debug("Main page entry")
-	app.logger.debug("Getting accounts now")
-	date = arrow.utcnow()
-	insert_account(date.format('MM/DD/YYYY'),"Jared", "Smith", "951452843", "Senior", "Devil Rush", "n/a")
+	#app.logger.debug("Getting accounts now")
+	#date = arrow.utcnow().format('MM/DD/YYYY')
+	#insert_account(date.format('MM/DD/YYYY'),"Jared", "Smith", "951452843", "Senior", "Devil Rush", "n/a")
 	#flask.session['accounts'] =  get_accounts()
 	
-	return flask.render_template('index.html')
+	return flask.render_template('splash.html')
 
-@app.route("/create")
+@app.route("/sign_up", methods=['GET','POST'])
 def create():
 	app.logger.debug("Account Creation page entry")
-	return flask.render_template('create.html')
+	if request.method == 'GET':
+		return flask.render_template('signup.html')
+	first = request.form['RegisterFirstNameInput']
+	return redirect(url_for('_sign_up', first=first))
+	
+@app.route("/login")
+def login():
+	app.logger.debug("Login page entry")
+	return flask.render_template('login.html')
 
 @app.errorhandler(404)
 def page_not_found(error):
@@ -93,25 +101,30 @@ def humanize_arrow_date(date):
 		human = date
 	return human
 
-@app.route("/_create")
+@app.route("/_sign_up", methods=["POST"])
 def create_account():
 	"""
 	Creates and inserts a new account into the database
 	"""
 	
 	print("Getting account information...")
-	date = request.args.get('date', 0, type=str)
-	first = request.args.get('first', 0, type=str)
-	last = request.args.get('last', 0, type=str)
-	s_id = request.args.get('s_id', 0, type=str)
-	status = request.args.get('status', 0, type=str)
-	sum_name = request.args.get('sum_name', 0, type=str)
-	referral = request.args.get('refer', 0, type=str)
-
+	first = request.form.get('RegisterFirstNameInput', 0, type=str)
+	"""
+	last = request.form.get('RegisterLastNameInput', 0, type=str)
+	email = request.form.get('RegisterEmailInput', 0, type=str)
+	phone = request.form.get('RegisterPhoneInput', 0, type=str)
+	s_id = request.form.get('RegisterIDInput', 0, type=str)
+	status = request.form.get('RegisterStatusInput', 0, type=str)
+	referral = request.form.get('RegisterReferInput', 0, type=str)
+	pwd = request.form.get('RegisterPasswordInput', 0, type=str)
+	confirm = request.form.get('LoginRepeatInput', 0, type=str)
+	sum_name = request.form.get('RegisterSumNameInput', 0, type=str)
+	"""
 	print("Inserting new account...")
-	insert_account(date, first, last, s_id, status, sum_name, referral)
+	print(first)
+	#insert_account(first, last, email, phone, s_id, status, pwd, sum_name, referral)
 
-	return flask.redirect("/index")
+	return flask.redirect("/login")
 
 @app.route("/_delete")
 def delete_account():
@@ -152,18 +165,21 @@ def get_accounts():
 	accounts.sort(key=lambda a: a["date"])
 	return accounts
 
-def insert_account(date, first, last, s_id, status, sum_name, referral):
+def insert_account(first, last, email, phone, s_id, status, pwd, sum_name, referral):
 	"""
 	Inserts an account into the database
 	"""
-
-	print("*** Inserting account")
-	print("***")
-	print("*** {} {}".format(first, last))
-	print("*** {}".format(s_id))
-
+	date = arrow.utcnow().format('MM/DD/YYYY')
 	dt = arrow.get(date, 'MM/DD/YYYY').replace(tzinfo='local')
 	iso_dt = dt.isoformat()
+
+	print("*** Account")
+	print("***")
+	print("*** {}".format(date))
+	print("*** {} {}".format(first, last))
+	print("*** {} {}".format(phone, email))
+	print("*** {}".format(status))
+	print("*** {}".format(s_id))
 	
 	print("Compiling account from data")
 	account = {
@@ -171,9 +187,12 @@ def insert_account(date, first, last, s_id, status, sum_name, referral):
 			"date" : iso_dt,
 			"first"	: first,
 			"last" : last,
+			"email" : email,
+			"phone" : phone,
 			"s_id" : s_id,
 			"status" : status,
 			"sum_name" : sum_name,
+			"pwd" : pwd,
 			"referral" : referral
 		}
 	collection.insert(account)

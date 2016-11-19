@@ -34,7 +34,8 @@
   max-width: 960px;
   margin: 0 auto;
   padding: 0 20px;
-  box-sizing: border-box; }
+  box-sizing: border-box;
+  }
 .column,
 .columns {
   width: 100%;
@@ -419,6 +420,19 @@ there.
 
 /* Self Made
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
+.splashBackground {
+  background: url(/static/splash.png) no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+.splashBackground p, .splashBackground h4 {
+	color: white;
+}
+#sign_up {
+	color: white;
+}
 .user {
   box-shadow: 1px 1px 3px #888888;
   border-radius: 2px;

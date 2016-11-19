@@ -31,19 +31,24 @@
 
   <!-- Primary Page Layout
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+<div class ="splashBackground"> 
   <div class="container">
     <div class="row">
       <div class="one-half column" style="margin-top: 25%">
         <h4>Welcome</h4>
         <p>This Splash.html page is a placeholder with the CSS, font and favicon. It's just waiting for you to add some content! If you need some help hit up the <a href="http://www.getskeleton.com">Skeleton documentation</a>.</p>
           <div class="two-third column">
-            <button class='button'>Sign Up!</button>
-            <button class='button-primary'>Log In</button>
+          	<form action="/sign_up" >
+            	<button class='button submit' id='sign_up'>Sign Up!</button>
+        	</form>
+        	<form action="/login">
+            	<button class='button-primary submit'>Log In</button>
+          	</form>
           </div>
       </div>
     </div>
   </div>
-
+</div>
 <!-- End Document
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
 </body>
