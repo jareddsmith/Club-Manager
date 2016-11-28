@@ -31,23 +31,23 @@
 
   <!-- Primary Page Layout
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <form action="/_sign_up" method="POST" style="margin: 5% 20% 15% 20%;">
+  <form method="POST" action="_sign_up" style="margin: 5% 20% 15% 20%;">
   <div class="row">
     <div class="column">
        <div class="five columns">
       <label for="RegisterFirstNameInput">First Name</label>
-      <input class="u-full-width" type="text" placeholder="First Name" id="RegisterFirstNameInput">
+      <input class="u-full-width" type="text" placeholder="First Name" id="RegisterFirstNameInput" name="RegisterFirstNameInput">
       <label for="RegisterLastNameInput">Last Name</label>
-      <input class="u-full-width" type="text" placeholder="Last Name" id="RegisterLastNameInput">
-      <input class="u-full-width" type="hidden" placeholder="Summoner Name" id="RegisterSumNameInput">
+      <input class="u-full-width" type="text" placeholder="Last Name" id="RegisterLastNameInput" name="RegisterLastNameInput">
+      <input class="u-full-width" type="hidden" placeholder="Summoner Name" id="RegisterSumNameInput" name="RegisterSumNameInput">
       <label for="LoginEmailInput">Your email</label>
-      <input class="u-full-width" type="email" placeholder="duckid@uoregon.edu" id="RegisterEmailInput">
+      <input class="u-full-width" type="email" placeholder="duckid@uoregon.edu" id="RegisterEmailInput" name="RegisterEmailInput">
       <label for="RegisterPhoneInput">Phone</label>
-      <input class="u-full-width" type="text" placeholder="Phone" id="RegisterPhoneInput">
+      <input class="u-full-width" type="text" placeholder="Phone" id="RegisterPhoneInput" name="RegisterPhoneInput">
       <label for="RegisterIDInput">Student ID</label>
-      <input class="u-full-width" type="text" placeholder="UO Student ID ( or L-Number)" id="RegisterIDInput">
+      <input class="u-full-width" type="text" placeholder="UO Student ID ( or L-Number)" id="RegisterIDInput" name="RegisterIDInput">
       <label for="RegisterStatusInput">Status</label>
-      <select id="RegisterStatusInput">
+      <select id="RegisterStatusInput" name="RegisterStatusInput">
       	<option value="Freshman"> Freshman </option>
       	<option value="Sophomore"> Sophomore </option>
       	<option value="Junior"> Junior </option>
@@ -56,11 +56,11 @@
       	<option value="Local"> Local Community </option>
       </select>
       <label for="RegisterReferInput">Referral</label>
-      <input class="u-full-width" type="text" placeholder="How did you hear about us?" id="RegisterReferInput">
+      <input class="u-full-width" type="text" placeholder="How did you hear about us?" id="RegisterReferInput" name="RegisterReferInput">
       <label for="LoginPasswordInput">Your password</label>
-      <input class="u-full-width" type="password" placeholder="Password" id="RegisterPasswordInput">
+      <input class="u-full-width" type="password" placeholder="Password" id="RegisterPasswordInput" name="RegisterPasswordInput">
       <label for="LoginRepeatInput">Repeat password</label>
-      <input class="u-full-width" type="password" placeholder="Repeat" id="LoginRepeatInput"></div>
+      <input class="u-full-width" type="password" placeholder="Repeat" id="LoginRepeatInput" name="LoginRepeatInput"></div>
     </div>
         <input type="button" onclick="document.location='/index'" value="Back"/>
         <input class="button-primary" type="submit" value="Submit">

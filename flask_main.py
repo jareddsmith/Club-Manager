@@ -1,6 +1,7 @@
 import flask
 from flask import render_template
 from flask import request
+from flask import redirect
 from flask import url_for
 
 import json
@@ -49,20 +50,12 @@ app.secret_key = str(uuid.uuid4())
 @app.route("/index")
 def index():
 	app.logger.debug("Main page entry")
-	#app.logger.debug("Getting accounts now")
-	#date = arrow.utcnow().format('MM/DD/YYYY')
-	#insert_account(date.format('MM/DD/YYYY'),"Jared", "Smith", "951452843", "Senior", "Devil Rush", "n/a")
-	#flask.session['accounts'] =  get_accounts()
-	
 	return flask.render_template('splash.html')
 
 @app.route("/sign_up", methods=['GET','POST'])
 def create():
 	app.logger.debug("Account Creation page entry")
-	if request.method == 'GET':
-		return flask.render_template('signup.html')
-	first = request.form['RegisterFirstNameInput']
-	return redirect(url_for('_sign_up', first=first))
+	return flask.render_template('signup.html')
 	
 @app.route("/login")
 def login():
@@ -108,23 +101,27 @@ def create_account():
 	"""
 	
 	print("Getting account information...")
-	first = request.form.get('RegisterFirstNameInput', 0, type=str)
-	"""
-	last = request.form.get('RegisterLastNameInput', 0, type=str)
-	email = request.form.get('RegisterEmailInput', 0, type=str)
-	phone = request.form.get('RegisterPhoneInput', 0, type=str)
-	s_id = request.form.get('RegisterIDInput', 0, type=str)
-	status = request.form.get('RegisterStatusInput', 0, type=str)
-	referral = request.form.get('RegisterReferInput', 0, type=str)
-	pwd = request.form.get('RegisterPasswordInput', 0, type=str)
-	confirm = request.form.get('LoginRepeatInput', 0, type=str)
-	sum_name = request.form.get('RegisterSumNameInput', 0, type=str)
-	"""
-	print("Inserting new account...")
-	print(first)
-	#insert_account(first, last, email, phone, s_id, status, pwd, sum_name, referral)
+	first = request.form.get('RegisterFirstNameInput', '', type=str)
+	last = request.form.get('RegisterLastNameInput', '', type=str)
+	email = request.form.get('RegisterEmailInput', '', type=str)
+	phone = request.form.get('RegisterPhoneInput', '', type=str)
+	s_id = request.form.get('RegisterIDInput', '', type=str)
+	status = request.form.get('RegisterStatusInput', '', type=str)
+	referral = request.form.get('RegisterReferInput', '', type=str)
+	pwd = request.form.get('RegisterPasswordInput', '', type=str)
+	confirm = request.form.get('LoginRepeatInput', '', type=str)
+	sum_name = request.form.get('RegisterSumNameInput', '', type=str)
+	
+	first.strip()
+	last.strip()
+	email.strip()
+	phone.strip()
+	s_id.strip()
+	sum_name.strip()
+	
+	insert_account(first, last, email, phone, s_id, status, pwd, sum_name, referral)
 
-	return flask.redirect("/login")
+	return flask.redirect("/sign_up")
 
 @app.route("/_delete")
 def delete_account():
@@ -180,6 +177,13 @@ def insert_account(first, last, email, phone, s_id, status, pwd, sum_name, refer
 	print("*** {} {}".format(phone, email))
 	print("*** {}".format(status))
 	print("*** {}".format(s_id))
+	
+	if first == '':
+		return flask.redirect("/sign_up")
+	if last == '':
+		return flask.redirect("/sign_up")
+	if pwd == '':
+		return flask.redirect("/sign_up")
 	
 	print("Compiling account from data")
 	account = {
