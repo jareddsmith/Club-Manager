@@ -5,7 +5,7 @@
   <!-- Basic Page Needs
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <meta charset="utf-8">
-  <title>Splash Page</title>
+  <title>Login</title>
   <meta name="description" content="">
   <meta name="author" content="">
 
@@ -31,14 +31,15 @@
 
   <!-- Primary Page Layout
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <form style="margin: 5% 20% 15% 20%;">
+  <form action="_login" method="POST" style="margin: 5% 20% 15% 20%;">
   <div class="row">
     <div class="column">
        <div class="five columns">
       <label for="LoginEmailInput">Your email</label>
-      <input class="u-full-width" type="email" placeholder="your@email.com" id="LoginEmailInput">
+      <input class="u-full-width" type="email" placeholder="your@email.com" id="LoginEmailInput" name="LoginEmailInput">
       <label for="LoginPasswordInput">Your password</label>
-      <input class="u-full-width" type="password" placeholder="password" id="LoginPasswordInput"></div>
+      <input class="u-full-width" type="password" placeholder="password" id="LoginPasswordInput" name="LoginPasswordInput">
+      </div>
     </div>
         <input type="button" onclick="document.location='/index'" value="Back"/>
         <input class="button-primary" type="submit" value="Submit">
