@@ -66,6 +66,8 @@ def login():
 @app.route("/dashboard")
 def landing():
 	app.logger.debug("Dashboard page entry")
+	app.logger.debug("Getting accounts now")
+	flask.session['accounts'] = get_accounts()
 	return flask.render_template('main.html')
 
 @app.errorhandler(404)
@@ -161,9 +163,10 @@ def login_user():
 	pwd = (base64.b64decode(pwd)).decode('ascii')
 	
 	if input_pwd == pwd:
+		flask.session['user'] = account
 		return flask.redirect("/dashboard")
 	
-	print("Invalid credentials")
+	flask.flash("Invalid credentials")
 	return flask.redirect("/login")
 	
 ######################
@@ -204,14 +207,17 @@ def insert_account(first, last, email, phone, s_id, status, pwd, sum_name, refer
 	print("*** {}".format(status))
 	print("*** {}".format(s_id))
 	
-	if first == '':
-		print("No first name given")
-		return flask.redirect("/sign_up")
-	if last == '':
-		print("No last name given")
-		return flask.redirect("/sign_up")
-	if pwd == '':
-		print("No password given")
+	#Input checking
+	if collection.find_one({"email": email}) or first == '' or last == '' or pwd == '':
+		if collection.find_one({"email": email}):
+			flask.flash("Account already registered.")
+			return flask.redirect("/login")
+		if first == '':
+			flask.flash("No first name given.")
+		if last == '':
+			flask.flash("No last name given.")
+		if pwd == '':
+			flask.flash("No password given.")
 		return flask.redirect("/sign_up")
 	
 	print("Encrypting password")
@@ -230,13 +236,17 @@ def insert_account(first, last, email, phone, s_id, status, pwd, sum_name, refer
 			"sum_name" : sum_name,
 			"pwd" : pwd,
 			"referral" : referral,
-			"role" : "user"
+			"role" : "user",
+			"major" : "",
+			"avail" : "",
+			"quote" : ""
 		}
 		
 	collection.insert(account)
 	print("Account has been inserted into the database.")
 
 	return
+	
 
 if __name__ == "__main__":
 	app.debug=CONFIG.DEBUG
