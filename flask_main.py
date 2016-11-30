@@ -67,13 +67,7 @@ def login():
 def landing():
 	app.logger.debug("Dashboard page entry")
 	app.logger.debug("Getting accounts now")
-	flask.session['accounts'] = get_accounts()
-	return flask.render_template('main.html')
 	
-@app.route("/update")	
-def update():
-	app.logger.debug("Update account page entry")
-	app.logger.debug("Getting account now")
 	accountID = flask.session['user']
 	account =  collection.find_one({"_id": ObjectId(accountID)})
 	flask.session['first'] = account['first']
@@ -82,7 +76,15 @@ def update():
 	flask.session['phone'] = account['phone']
 	flask.session['quote'] = account['quote']
 	flask.session['avail'] = account['avail']
-
+	flask.session['major'] = account['major']
+	flask.session['accounts'] = get_accounts()
+	
+	return flask.render_template('main.html')
+	
+@app.route("/update")	
+def update():
+	app.logger.debug("Update account page entry")
+	app.logger.debug("Getting account now")
 	return flask.render_template('usermenu.html')
 
 @app.errorhandler(404)
@@ -145,7 +147,8 @@ def create_account():
 	sum_name.strip()
 	
 	insert_account(first, last, email, phone, s_id, status, pwd, sum_name, referral)
-
+	flask.flash("Account created! You may now login.")
+	
 	return flask.redirect("/login")
 
 @app.route("/_delete")
@@ -189,6 +192,43 @@ def update_user():
 	"""
 	Update user information
 	"""
+	accountID = flask.session['user']
+	print(flask.session['first'])
+	
+	mon = request.form.get('mon', '', type=str)
+	tue = request.form.get('tue', '', type=str)
+	wed = request.form.get('wed', '', type=str)
+	thu = request.form.get('thu', '', type=str)
+	fri = request.form.get('fri', '', type=str)
+	sat = request.form.get('sat', '', type=str)
+	sun = request.form.get('sun', '', type=str)
+	avail = mon + tue + wed + thu + fri + sat + sun
+	
+	first = request.form.get('first', '', type=str)
+	last = request.form.get('last', '', type=str)
+	major = request.form.get('major', '', type=str)
+	email = request.form.get('email', '', type=str)
+	phone = request.form.get('phone', '', type=str)
+	quote = request.form.get('quote', '', type=str)
+	
+	if not avail:
+		avail = flask.session['avail']		
+	if not first:
+		first = flask.session['first']
+	if not last:
+		last = flask.session['last']
+	if not major:
+		major = flask.session['major']
+	if not email:
+		email = flask.session['email']
+	if not phone:
+		phone = flask.session['phone']
+	if not quote:
+		quote = flask.session['quote']
+		
+	collection.update({"_id": ObjectId(accountID)},{'$set':{'avail':avail,'first':first,'last':last,'major':major,'email':email,'phone':phone,'quote':quote}})
+	flask.flash("Your user information has been updated!")
+	return flask.redirect("/dashboard")
 	
 	
 ######################
@@ -234,13 +274,14 @@ def insert_account(first, last, email, phone, s_id, status, pwd, sum_name, refer
 		if collection.find_one({"email": email}):
 			flask.flash("Account already registered.")
 			return flask.redirect("/login")
-		if first == '':
-			flask.flash("No first name given.")
-		if last == '':
-			flask.flash("No last name given.")
-		if pwd == '':
-			flask.flash("No password given.")
-		return flask.redirect("/sign_up")
+		else:
+			if first == '':
+				flask.flash("No first name given.")
+			if last == '':
+				flask.flash("No last name given.")
+			if pwd == '':
+				flask.flash("No password given.")
+			return flask.redirect("/sign_up")
 	
 	print("Encrypting password")
 	pwd = base64.b64encode(pwd.encode('ascii'))
