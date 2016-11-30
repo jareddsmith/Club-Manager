@@ -53,7 +53,7 @@ def index():
 	app.logger.debug("Main page entry")
 	return flask.render_template('splash.html')
 
-@app.route("/sign_up", methods=['GET','POST'])
+@app.route("/sign_up")
 def create():
 	app.logger.debug("Account Creation page entry")
 	return flask.render_template('signup.html')
@@ -137,6 +137,9 @@ def create_account():
 	confirm = request.form.get('LoginRepeatInput', '', type=str)
 	sum_name = request.form.get('RegisterSumNameInput', '', type=str)
 	
+	if pwd != confirm:
+		flask.flash("Please confirm your password")
+		return flask.redirect("/sign_up")
 	
 	#Clears any excess whitespace
 	first.strip()
@@ -146,8 +149,11 @@ def create_account():
 	s_id.strip()
 	sum_name.strip()
 	
-	insert_account(first, last, email, phone, s_id, status, pwd, sum_name, referral)
-	flask.flash("Account created! You may now login.")
+	chk = insert_account(first, last, email, phone, s_id, status, pwd, sum_name, referral)
+	if chk == 1:
+		return flask.redirect("/login")
+	if chk == 2:
+		return flask.redirect("/sign_up")
 	
 	return flask.redirect("/login")
 
@@ -185,6 +191,8 @@ def login_user():
 		return flask.redirect("/dashboard")
 	
 	flask.flash("Invalid credentials")
+	if not input_pwd:
+		flask.flash("No password entered")
 	return flask.redirect("/login")
 	
 @app.route("/_update", methods=["POST"])
@@ -270,18 +278,24 @@ def insert_account(first, last, email, phone, s_id, status, pwd, sum_name, refer
 	print("*** {}".format(s_id))
 	
 	#Input checking
-	if collection.find_one({"email": email}) or first == '' or last == '' or pwd == '':
-		if collection.find_one({"email": email}):
-			flask.flash("Account already registered.")
-			return flask.redirect("/login")
-		else:
-			if first == '':
-				flask.flash("No first name given.")
-			if last == '':
-				flask.flash("No last name given.")
-			if pwd == '':
-				flask.flash("No password given.")
-			return flask.redirect("/sign_up")
+	account = collection.find_one({"email": email})
+	if account is not None:
+		flask.flash("Account already created!")
+		return 1
+	
+	if not first or not last or not email or not pwd:
+		if not first:
+			flask.flash("No first name given.")
+		if not last:
+			flask.flash("No last name given.")
+		if not email:
+			flask.flash("No email given.")
+		if not pwd:
+			flask.flash("No password given.")
+		return 2
+	
+	else:
+		flask.flash("Account created! You may now login.")
 	
 	print("Encrypting password")
 	pwd = base64.b64encode(pwd.encode('ascii'))
@@ -305,10 +319,10 @@ def insert_account(first, last, email, phone, s_id, status, pwd, sum_name, refer
 			"quote" : ""
 		}
 		
-	collection.insert(account)
+	#collection.insert(account)
 	print("Account has been inserted into the database.")
 
-	return
+	return 0
 	
 
 if __name__ == "__main__":
