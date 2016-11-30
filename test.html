@@ -1,0 +1,69 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html> <head>
+<title>Memos</title>
+
+  <!-- 'viewport' is used by bootstrap to respond to device size -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Javascript:  JQuery from a content distribution network (CDN) -->
+  <script
+     src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js">
+  </script>
+
+  <!-- Bootstrap includes javascript and css  (must follow jquery) -->
+  <link rel="stylesheet"
+   href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+   <script
+    src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js">
+</script>
+
+   <!-- Our own style sheet -->
+   <link rel="stylesheet" href="/static/css/memos.css" />
+</head>
+<body>
+<div class="container">
+
+<!-- Flashed messages before content -->
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class=flashes>
+    {% for message in messages %}
+      <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+
+<p>
+<h1>Memos</h1>
+<form action="/create">
+    <input type="submit" value="Create a new Memo">
+</form>
+</p>
+
+{% if session.memos %}
+    {% for memo in session.memos %}
+  <form method="GET" action="_delete">
+  <div class="memo">
+  <div class="row">
+  <div class="col-md-2">
+    {{ memo.date | humanize }}
+  </div>
+  <div class="col-md-8">
+    {{ memo.text }}
+  </div>
+  <div class="col-md-2">
+      <input type="hidden" name="memoID" value="{{memo._id}}"/>
+      <input type="submit" value="Delete?"/>
+  </div>
+  </div> <!-- row -->
+  </div> <!-- memo -->
+  </form>
+  <hr>
+  {% endfor %}
+{% else %}
+  <p>No memos for you. </p>  
+{% endif %}
+</div> <!-- container -->
+</body>
+</html>

@@ -6,6 +6,7 @@ from flask import url_for
 
 import json
 import logging
+import base64
 
 # Date Handling
 import arrow
@@ -62,6 +63,13 @@ def login():
 	app.logger.debug("Login page entry")
 	return flask.render_template('login.html')
 
+@app.route("/dashboard")
+def landing():
+	app.logger.debug("Dashboard page entry")
+	app.logger.debug("Getting accounts now")
+	flask.session['accounts'] = get_accounts()
+	return flask.render_template('main.html')
+
 @app.errorhandler(404)
 def page_not_found(error):
 	app.logger.debug("Page not found")
@@ -112,6 +120,8 @@ def create_account():
 	confirm = request.form.get('LoginRepeatInput', '', type=str)
 	sum_name = request.form.get('RegisterSumNameInput', '', type=str)
 	
+	
+	#Clears any excess whitespace
 	first.strip()
 	last.strip()
 	email.strip()
@@ -121,7 +131,7 @@ def create_account():
 	
 	insert_account(first, last, email, phone, s_id, status, pwd, sum_name, referral)
 
-	return flask.redirect("/sign_up")
+	return flask.redirect("/login")
 
 @app.route("/_delete")
 def delete_account():
@@ -139,7 +149,26 @@ def delete_account():
 	print("Deleted! Redirecting to **TBD**.")
 
 	return flask.redirect("/**TBD**")
-
+	
+@app.route("/_login", methods=["POST"])
+def login_user():
+	"""
+	Login user
+	"""
+	input_email = request.form.get('LoginEmailInput')
+	input_pwd = request.form.get('LoginPasswordInput')
+	
+	account = collection.find_one({"email": input_email})
+	pwd = account["pwd"]
+	pwd = (base64.b64decode(pwd)).decode('ascii')
+	
+	if input_pwd == pwd:
+		flask.session['user'] = account
+		return flask.redirect("/dashboard")
+	
+	flask.flash("Invalid credentials")
+	return flask.redirect("/login")
+	
 ######################
 #
 # SUPPORTING FUNCTIONS
@@ -178,12 +207,21 @@ def insert_account(first, last, email, phone, s_id, status, pwd, sum_name, refer
 	print("*** {}".format(status))
 	print("*** {}".format(s_id))
 	
-	if first == '':
+	#Input checking
+	if collection.find_one({"email": email}) or first == '' or last == '' or pwd == '':
+		if collection.find_one({"email": email}):
+			flask.flash("Account already registered.")
+			return flask.redirect("/login")
+		if first == '':
+			flask.flash("No first name given.")
+		if last == '':
+			flask.flash("No last name given.")
+		if pwd == '':
+			flask.flash("No password given.")
 		return flask.redirect("/sign_up")
-	if last == '':
-		return flask.redirect("/sign_up")
-	if pwd == '':
-		return flask.redirect("/sign_up")
+	
+	print("Encrypting password")
+	pwd = base64.b64encode(pwd.encode('ascii'))
 	
 	print("Compiling account from data")
 	account = {
@@ -197,12 +235,18 @@ def insert_account(first, last, email, phone, s_id, status, pwd, sum_name, refer
 			"status" : status,
 			"sum_name" : sum_name,
 			"pwd" : pwd,
-			"referral" : referral
+			"referral" : referral,
+			"role" : "user",
+			"major" : "",
+			"avail" : "",
+			"quote" : ""
 		}
+		
 	collection.insert(account)
 	print("Account has been inserted into the database.")
 
 	return
+	
 
 if __name__ == "__main__":
 	app.debug=CONFIG.DEBUG

@@ -511,9 +511,24 @@ there.
   margin-left: 120px;
   max-width: 1000px;
   width: 1000px;
-  padding-top: 100px;
-  
+  padding-top: 100px; 
 }
 .publicannouncement p {
   background-color: yellow;
+}
+.flashesList {
+    margin-top: 5%;
+}
+.flashes {
+    margin-left: 2%;
+    background-color: #FCE011;
+    width: 300px;
+    border-left: 6px solid;
+    height: 35px;
+    border-radius: 0px 5px 5px 0px;
+    border-color: #250909;
+    list-style: none;
+    padding-left: 12px;
+    font-weight: 700;
+    padding-top: 10px;
 }

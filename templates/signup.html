@@ -28,6 +28,16 @@
 
 </head>
 <body>
+<!-- Flashed messages before content -->
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class="flashesList">
+    {% for message in messages %}
+      <li class=flashes>{{ message }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
 
   <!-- Primary Page Layout
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
