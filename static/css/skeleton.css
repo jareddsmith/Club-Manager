@@ -451,7 +451,7 @@ there.
 .user .userinfo p {
   margin-bottom: 1rem;
 }
-@media (max-width: 460px) {
+@media screen and (max-width: 460px) {
   .user .userinfo {
     float: left;
   }
@@ -502,6 +502,14 @@ there.
 }
 .navbar .navbuttons {
   width: 29%;
+}
+@media (max-width: 1200px) {
+  .navbar .navcenter {
+    width: 10% !important;
+  }
+  .navbar .navbuttons {
+    width: 69% !important;
+  }
 }
 .navbar .navbuttons .menuitems {
   list-style: none;
@@ -588,15 +596,22 @@ there.
     margin-top: 5%;
 }
 .flashes {
-    margin-left: 2%;
-    background-color: #FCE011;
-    width: 300px;
-    border-left: 6px solid;
-    height: 35px;
-    border-radius: 0px 5px 5px 0px;
-    border-color: #250909;
-    list-style: none;
-    padding-left: 12px;
-    font-weight: 700;
-    padding-top: 10px;
+  margin-left: 2%;
+  background-color: #FCE011;
+  width: 300px;
+  border-left: 6px solid;
+  height: 35px;
+  border-radius: 0px 5px 5px 0px;
+  border-color: #250909;
+  list-style: none;
+  padding-left: 12px;
+  font-weight: 700;
+  padding-top: 10px;
+}
+/* Sign Up */
+.signup-column-1, .signup-column-2 {
+  width: 300px  ;
+}
+.signup-column-2 {
+  padding-left: 20px;
 }
