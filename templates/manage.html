@@ -1,24 +1,31 @@
-<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
-<html> <head>
-<title>Manage</title>
+<!DOCTYPE html>
+<html lang="en">
+<head>
 
-  <!-- 'viewport' is used by bootstrap to respond to device size -->
+  <!-- Basic Page Needs
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta charset="utf-8">
+  <title>Update Info</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- Mobile Specific Metas
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <!-- Javascript:  JQuery from a content distribution network (CDN) -->
-  <script
-     src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js">
-  </script>
+  <!-- FONT
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
 
-  <!-- Bootstrap includes javascript and css  (must follow jquery) -->
-  <link rel="stylesheet"
-   href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-   <script
-    src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js">
-</script>
+  <!-- CSS
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="stylesheet" href="static/css/normalize.css">
+  <link rel="stylesheet" href="static/css/skeleton.css">
 
-   <!-- Our own style sheet -->
-   <link rel="stylesheet" href="/static/css/memos.css" />
+  <!-- Favicon
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="icon" type="image/png" href="images/favicon.png">
+
 </head>
 <body>
 <div class="container">
@@ -41,29 +48,31 @@
 {% if session.accounts %}
     {% for account in session.accounts %}
   <form method="GET" action="_delete">
-  <div class="account">
-  <div class="row">
-  <div class="col-md-2">
-    {{ account.date }}
-  </div>
-  <div class="col-md-8">
-    {{ account.first }} {{ account.last }}
-  </div>
-    <div class="col-md-4">
-    {{ account.email }}
-  </div>
-  <div class="col-md-2">
-      <input type="hidden" name="accountID" value="{{account._id}}"/>
-      <input type="submit" value="Delete?"/>
-  </div>
-  </div> <!-- row -->
-  </div> <!-- memo -->
+    <table class="u-full-width">
+      <thead>
+        <tr>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Mail</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{{ account.first }}</td>
+          <td>{{ account.last }}</td>
+          <td>{{ account.email }}</td>
+          <td><input type="hidden" name="accountID" value="{{account._id}}"/><input type="submit" value="Delete?"/></td>
+        <tr>
+      </tbody>
+    </table>
   </form>
   <hr>
   {% endfor %}
 {% else %}
-  <p>No memos for you. </p>  
+  <p>No accounts available.</p>  
 {% endif %}
-</div> <!-- container -->
-</body>
+    </div> <!-- container -->
+  </body>
 </html>
+
