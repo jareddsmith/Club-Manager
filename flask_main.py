@@ -69,6 +69,21 @@ def landing():
 	app.logger.debug("Getting accounts now")
 	flask.session['accounts'] = get_accounts()
 	return flask.render_template('main.html')
+	
+@app.route("/update")	
+def update():
+	app.logger.debug("Update account page entry")
+	app.logger.debug("Getting account now")
+	accountID = flask.session['user']
+	account =  collection.find_one({"_id": ObjectId(accountID)})
+	flask.session['first'] = account['first']
+	flask.session['last'] = account['last']
+	flask.session['email'] = account['email']
+	flask.session['phone'] = account['phone']
+	flask.session['quote'] = account['quote']
+	flask.session['avail'] = account['avail']
+
+	return flask.render_template('usermenu.html')
 
 @app.errorhandler(404)
 def page_not_found(error):
@@ -163,11 +178,18 @@ def login_user():
 	pwd = (base64.b64decode(pwd)).decode('ascii')
 	
 	if input_pwd == pwd:
-		flask.session['user'] = account
+		flask.session['user'] =  str(account['_id'])
 		return flask.redirect("/dashboard")
 	
 	flask.flash("Invalid credentials")
 	return flask.redirect("/login")
+	
+@app.route("/_update", methods=["POST"])
+def update_user():
+	"""
+	Update user information
+	"""
+	
 	
 ######################
 #
