@@ -86,6 +86,11 @@ def update():
 	app.logger.debug("Update account page entry")
 	app.logger.debug("Getting account now")
 	return flask.render_template('usermenu.html')
+	
+@app.route("/manage")
+def manage():
+	app.logger.debug("Manage page entry")
+	return flask.render_template('manage.html')
 
 @app.errorhandler(404)
 def page_not_found(error):
@@ -182,9 +187,19 @@ def login_user():
 	input_email = request.form.get('LoginEmailInput')
 	input_pwd = request.form.get('LoginPasswordInput')
 	
+	print(input_pwd)
 	account = collection.find_one({"email": input_email})
+	print(account)
+	if account is None:
+		flask.flash("Account not found!")
+		return flask.redirect("/login")
+	
 	pwd = account["pwd"]
-	pwd = (base64.b64decode(pwd)).decode('ascii')
+	print(pwd)
+	pwd = base64.b64decode(pwd)
+	print(pwd)
+	pwd = pwd.decode('ascii')
+	print(pwd)
 	
 	if input_pwd == pwd:
 		flask.session['user'] =  str(account['_id'])
@@ -319,7 +334,7 @@ def insert_account(first, last, email, phone, s_id, status, pwd, sum_name, refer
 			"quote" : ""
 		}
 		
-	#collection.insert(account)
+	collection.insert(account)
 	print("Account has been inserted into the database.")
 
 	return 0
